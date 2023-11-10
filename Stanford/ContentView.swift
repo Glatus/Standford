@@ -24,20 +24,10 @@ struct ContentView: View {
             }
             Spacer()
             themeChangers
-            cardCountAdjusters
         }
         .padding()
         
         
-    }
-    var cardCountAdjusters: some View {
-        HStack {
-            cardRemover
-            Spacer()
-            cardAdder
-        }
-        .imageScale(.large)
-        .font(.largeTitle)
     }
     
     var cards: some View {
@@ -56,14 +46,6 @@ struct ContentView: View {
                 themeButtons(setIndex: setIndex)
             }
         }
-    }
-    
-    var cardRemover: some View {
-        cardCountAdjuster(by: -1, symbol: "rectangle.stack.badge.minus.fill")
-    }
-    
-    var cardAdder: some View {
-        cardCountAdjuster(by: +1, symbol: "rectangle.stack.badge.plus.fill")
         
     }
     
