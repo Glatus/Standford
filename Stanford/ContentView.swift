@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    var emojis = ["🦆","🦉","🦇","🦅","🦦","🦥","🦡","🦤"]
-    
-    @State var cardCount: Int = 4
+    @State var emojis = [["🦆","🦉","🦇","🦅","🦦","🦥","🦡","🦤"],["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",],["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉",]]
+    @State var theme: Int = 0
+    @State var cardCount: Int = 6
     
     var body: some View {
         VStack {
@@ -24,6 +24,9 @@ struct ContentView: View {
             cardCountAdjusters
         }
         .padding()
+        .onAppear() {
+            
+        }
     }
     var cardCountAdjusters: some View {
         HStack {
@@ -37,7 +40,7 @@ struct ContentView: View {
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
             ForEach(0..<cardCount, id: \.self) {
-                index in CardView(content: emojis[index])
+                index in CardView(content: emojis[theme][index])
                     .aspectRatio(2/3,contentMode: .fit)
             }
         }
@@ -53,13 +56,19 @@ struct ContentView: View {
         .disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
     }
     
+    func themeButtons(setIndex: Int) -> some View {
+        Button(action: {
+            theme = setIndex
+        }, label: { Image(systemName: "smiley")
+        })
+        .imageScale(.large)
+    }
+    
     var themeChangers: some View {
-        VStack {
-            Button(action: {
-                emojis = ["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",]
-                
-            }, label: { Image(systemName: "smiley")
-            })
+        HStack {
+            ForEach(0..<3) { setIndex in
+                themeButtons(setIndex: setIndex)
+            }
         }
     }
     
@@ -78,7 +87,7 @@ struct CardView: View {
         ZStack {
             let base: RoundedRectangle = RoundedRectangle(cornerRadius: 12)
             Group {
-                base.foregroundColor(.white)
+                base.foregroundColor(.gray)
                 base.strokeBorder(lineWidth: 2)
                 Text(content).font(.largeTitle)
             }
