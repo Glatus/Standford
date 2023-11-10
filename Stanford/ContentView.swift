@@ -80,7 +80,6 @@ struct ContentView: View {
         currentEmojis = finalEmojis.shuffled()
         cardCount = currentEmojis.count
     }
-
     
     func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
         Button(action: {
@@ -101,7 +100,6 @@ struct ContentView: View {
         })
         .imageScale(.large)
     }
-    
 }
 struct CardView: View {
     let content: String
@@ -121,9 +119,10 @@ struct CardView: View {
             isFaceUp.toggle()
         }
     }
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView()
-        }
+}
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
+
