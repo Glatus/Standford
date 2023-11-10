@@ -51,7 +51,7 @@ struct ContentView: View {
     }
     
     var themeChangers: some View {
-        HStack {
+        HStack(alignment: .bottom) {
             ForEach(0..<3) { setIndex in
                 themeButtons(setIndex: setIndex)
             }
@@ -96,7 +96,28 @@ struct ContentView: View {
             cardCount = currentEmojis.count
             shuffledDeck()
         }, label: {
-            Image(systemName: "smiley")
+            switch setIndex {
+            case 0:
+                VStack {
+                    Image(systemName: "bird.fill")
+                    Text("Bird").font(.caption)
+                }
+            case 1:
+                VStack {
+                    Image(systemName: "carrot.fill")
+                    Text("Food").font(.caption)
+                }
+            case 2:
+                VStack {
+                    Image(systemName: "soccerball")
+                    Text("Balls").font(.caption)
+                }
+            default:
+                VStack {
+                    Image(systemName: "ant.fill")
+                    Text("BUG").font(.caption)
+                }
+            }
         })
         .imageScale(.large)
     }
