@@ -80,27 +80,28 @@ struct ContentView: View {
         }, label: {
             switch setIndex {
             case 0:
-                VStack {
+                
+                LazyVStack {
                     Image(systemName: "bird.fill")
-                    Text("Bird").font(.caption)
+                    Text("Bird")
                 }
             case 1:
-                VStack {
+                LazyVStack {
                     Image(systemName: "carrot.fill")
-                    Text("Food").font(.caption)
+                    Text("Food")
                 }
             case 2:
-                VStack {
+                LazyVStack {
                     Image(systemName: "soccerball")
-                    Text("Balls").font(.caption)
+                    Text("Balls")
                 }
             default:
-                VStack {
+                LazyVStack {
                     Image(systemName: "ant.fill")
-                    Text("BUG").font(.caption)
-                }
+                    Text("BUG")                }
             }
         })
+        .font(.footnote)
         .imageScale(.large)
     }
 }
