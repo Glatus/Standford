@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var emojis = [["🦆","🦉","🦇","🦅","🦦","🦥","🦡","🦤"],["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",],["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉",]]
-    @State var theme: Int = 0
-    @State var cardCount: Int = 6
+    @State var currentEmojis: [String] = []
+    @State var theme = 0
+    @State var cardCount = 0
     
     var body: some View {
+        
         VStack {
             Text("Memorize!")
                 .font(.largeTitle)
@@ -25,7 +26,7 @@ struct ContentView: View {
         }
         .padding()
         .onAppear() {
-            
+            shuffledDeck()
         }
     }
     var cardCountAdjusters: some View {
@@ -37,31 +38,15 @@ struct ContentView: View {
         .imageScale(.large)
         .font(.largeTitle)
     }
+    
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
             ForEach(0..<cardCount, id: \.self) {
-                index in CardView(content: emojis[theme][index])
+                index in CardView(content: currentEmojis[index])
                     .aspectRatio(2/3,contentMode: .fit)
             }
         }
         .foregroundColor(.orange)
-    }
-    
-    func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
-        Button(action: {
-            cardCount += offset
-        }, label: {
-            Image(systemName: symbol)
-        })
-        .disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
-    }
-    
-    func themeButtons(setIndex: Int) -> some View {
-        Button(action: {
-            theme = setIndex
-        }, label: { Image(systemName: "smiley")
-        })
-        .imageScale(.large)
     }
     
     var themeChangers: some View {
@@ -75,10 +60,48 @@ struct ContentView: View {
     var cardRemover: some View {
         cardCountAdjuster(by: -1, symbol: "rectangle.stack.badge.minus.fill")
     }
+    
     var cardAdder: some View {
         cardCountAdjuster(by: +1, symbol: "rectangle.stack.badge.plus.fill")
         
     }
+    
+    func shuffledDeck() {
+        let emojis = [["🦆","🦉","🦇","🦅","🦦","🦥","🦡","🦤"],["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",],["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉",]]
+        
+        let shuffledEmojis = emojis[theme].shuffled()
+        var finalEmojis = [String]()
+        
+        for emoji in shuffledEmojis {
+            for _ in 0..<2 {
+                finalEmojis.append(emoji)
+            }
+        }
+        currentEmojis = finalEmojis.shuffled()
+        cardCount = currentEmojis.count
+    }
+
+    
+    func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
+        Button(action: {
+            cardCount += offset
+        }, label: {
+            Image(systemName: symbol)
+        })
+        .disabled(cardCount + offset < 1 || cardCount + offset > currentEmojis.count)
+    }
+    
+    func themeButtons(setIndex: Int) -> some View {
+        Button(action: {
+            theme = setIndex
+            cardCount = currentEmojis[theme].count
+            shuffledDeck()
+        }, label: {
+            Image(systemName: "smiley")
+        })
+        .imageScale(.large)
+    }
+    
 }
 struct CardView: View {
     let content: String
