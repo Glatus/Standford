@@ -9,9 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     @State var currentEmojis: [String] = []
+    let emojis = [["🦆","🦉","🦇","🦅","🦦","🦥","🦡","🦤"],
+                         ["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",],
+                         ["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉",]]
     @State var theme = 0
     @State var cardCount = 0
-    
     var body: some View {
         
         VStack {
@@ -25,9 +27,8 @@ struct ContentView: View {
             cardCountAdjusters
         }
         .padding()
-        .onAppear() {
-            shuffledDeck()
-        }
+        
+        
     }
     var cardCountAdjusters: some View {
         HStack {
@@ -41,9 +42,9 @@ struct ContentView: View {
     
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
-            ForEach(0..<cardCount, id: \.self) {
-                index in CardView(content: currentEmojis[index])
-                    .aspectRatio(2/3,contentMode: .fit)
+            ForEach(0..<cardCount, id: \.self) { index in
+                CardView(content: currentEmojis[index])
+                    .aspectRatio(2/3, contentMode: .fit)
             }
         }
         .foregroundColor(.orange)
@@ -67,8 +68,6 @@ struct ContentView: View {
     }
     
     func shuffledDeck() {
-        let emojis = [["🦆","🦉","🦇","🦅","🦦","🦥","🦡","🦤"],["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",],["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉",]]
-        
         let shuffledEmojis = emojis[theme].shuffled()
         var finalEmojis = [String]()
         
@@ -79,6 +78,7 @@ struct ContentView: View {
         }
         currentEmojis = finalEmojis.shuffled()
         cardCount = currentEmojis.count
+        
     }
     
     func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
@@ -93,7 +93,7 @@ struct ContentView: View {
     func themeButtons(setIndex: Int) -> some View {
         Button(action: {
             theme = setIndex
-            cardCount = currentEmojis[theme].count
+            cardCount = currentEmojis.count
             shuffledDeck()
         }, label: {
             Image(systemName: "smiley")
@@ -125,4 +125,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
