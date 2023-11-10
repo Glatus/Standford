@@ -31,7 +31,7 @@ struct ContentView: View {
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
             ForEach(0..<cardCount, id: \.self) { index in
                 CardView(content: currentEmojis[index])
                     .aspectRatio(2/3, contentMode: .fit)
@@ -107,7 +107,7 @@ struct ContentView: View {
 }
 struct CardView: View {
     let content: String
-    @State var isFaceUp = true
+    @State var isFaceUp = false
     var body: some View {
         ZStack {
             let base: RoundedRectangle = RoundedRectangle(cornerRadius: 12)
