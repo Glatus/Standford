@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  EmojiMemoryGameView.swift
 //  Stanford
 //
 //  Created by iosdev on 8.11.2023.
@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct EmojiMemoryGameView: View {
     @State var currentEmojis: [String] = []
-    let emojis = [["🦆","🦉","🦇","🦅","🦦","🦥","🦡","🦤"],
-                         ["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",],
-                         ["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉",]]
+    @ObservedObject var viewModel: EmojiMemoryGame
+    //let emojis = [["🦆","🦉","🦇","🦅","🦦","🦥","🦡","🦤"],
+                         //["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",],
+                         //["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉",]]
+    
     @State var theme = 0
     @State var cardCount = 0
     var body: some View {
@@ -22,19 +24,21 @@ struct ContentView: View {
             ScrollView {
                 cards
             }
+            Button("Shuffle") {
+                viewModel.shuffle()
+            }
             Spacer()
             themeChangers
         }
         .padding()
-        
-        
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
-            ForEach(0..<cardCount, id: \.self) { index in
-                CardView(content: currentEmojis[index])
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 0)],spacing: 0) {
+            ForEach(viewModel.cards.indices, id: \.self) { index in
+                CardView(viewModel.cards[index])
                     .aspectRatio(2/3, contentMode: .fit)
+                    .padding(4)
             }
         }
         .foregroundColor(.orange)
@@ -49,19 +53,6 @@ struct ContentView: View {
         
     }
     
-    func shuffledDeck() {
-        let shuffledEmojis = emojis[theme].shuffled()
-        var finalEmojis = [String]()
-        
-        for emoji in shuffledEmojis {
-            for _ in 0..<2 {
-                finalEmojis.append(emoji)
-            }
-        }
-        currentEmojis = finalEmojis.shuffled()
-        cardCount = currentEmojis.count
-        
-    }
     
     func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
         Button(action: {
@@ -76,7 +67,6 @@ struct ContentView: View {
         Button(action: {
             theme = setIndex
             cardCount = currentEmojis.count
-            shuffledDeck()
         }, label: {
             switch setIndex {
             case 0:
@@ -106,26 +96,29 @@ struct ContentView: View {
     }
 }
 struct CardView: View {
-    let content: String
-    @State var isFaceUp = false
+    let card: MemoryGame<String>.Card
+    
+    init(_ card: MemoryGame<String>.Card) {
+        self.card = card
+    }
+    
     var body: some View {
         ZStack {
             let base: RoundedRectangle = RoundedRectangle(cornerRadius: 12)
             Group {
                 base.foregroundColor(.gray)
                 base.strokeBorder(lineWidth: 2)
-                Text(content).font(.largeTitle)
+                Text(card.content).font(.system(size: 200))
+                    .minimumScaleFactor(0.01)
+                    .aspectRatio(1, contentMode: .fit)
             }
-            .opacity(isFaceUp ? 1 : 0)
-            base.fill().opacity(isFaceUp ? 0 : 1)
-        }
-        .onTapGesture {
-            isFaceUp.toggle()
+            .opacity(card.isFaceUp ? 1 : 0)
+            base.fill().opacity(card.isFaceUp ? 0 : 1)
         }
     }
 }
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        EmojiMemoryGameView(viewModel: EmojiMemoryGame())
     }
 }
