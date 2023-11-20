@@ -4,6 +4,7 @@
 //
 //  Created by iosdev on 11.11.2023.
 //
+// ViewModel
 
 import SwiftUI
 

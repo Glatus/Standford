@@ -4,6 +4,7 @@
 //
 //  Created by iosdev on 11.11.2023.
 //
+// Model
 
 import Foundation
 
